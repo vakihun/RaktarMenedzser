@@ -1,0 +1,20 @@
+table {
+  width: 100%;
+}
+
+.mat-form-field {
+  font-size: 14px;
+  width: 100%;
+}
+
+td,
+th {
+  width: 25%;
+}
+.topbar {
+  padding: 20px;
+}
+.topbar button {
+  margin-left: 30px;
+  margin-top: 8px;
+}

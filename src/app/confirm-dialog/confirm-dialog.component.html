@@ -1,0 +1,13 @@
+<h1 mat-dialog-title>Megerősítés</h1>
+<div mat-dialog-content>{{ confirmMessage }}</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="dialogRef.close(false)">Mégse</button>
+  <span class="spacer"></span>
+  <button
+    mat-button
+    style="color: #fff; background-color: #153961"
+    (click)="dialogRef.close(true)"
+  >
+    Mentés
+  </button>
+</div>

@@ -1,0 +1,59 @@
+<div style="height: 80vh">
+  <mat-toolbar color="primary">
+    <mat-toolbar-row>
+      <button
+        mat-icon-button
+        (click)="sidenav.toggle()"
+        fxShow="true"
+        fxHide.gt-sm
+        *ngIf="isAuthenticated()"
+      >
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span fxHide fxShow.gt-xs>Raktár Menedzser</span>
+      <span fxHide.gt-xs>RM</span>
+      <span class="spacer"></span>
+      <div fxShow="true" fxHide.lt-md *ngIf="isAuthenticated()">
+        <button
+          mat-stroked-button
+          [routerLink]="['/things']"
+          routerLinkActive="router-link-active"
+        >
+          Tárgyak
+        </button>
+        <button
+          mat-stroked-button
+          [routerLink]="['/warehouses']"
+          routerLinkActive="router-link-active"
+        >
+          Raktárak
+        </button>
+        <button mat-stroked-button (click)="logOut()">Kijelentkezés</button>
+      </div>
+      <p>{{ getUsername() }}</p>
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  <mat-sidenav-container fxFlexFill>
+    <mat-sidenav #sidenav (click)="sidenav.toggle()">
+      <mat-nav-list>
+        <a
+          mat-list-item
+          [routerLink]="['/things']"
+          routerLinkActive="router-link-active"
+          >Tárgyak</a
+        >
+        <a
+          mat-list-item
+          [routerLink]="['/warehouses']"
+          routerLinkActive="router-link-active"
+          >Raktárak</a
+        >
+        <a mat-list-item (click)="logOut()">Kijelentkezés</a>
+      </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content fxFlexFill>
+      <ng-content></ng-content>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>

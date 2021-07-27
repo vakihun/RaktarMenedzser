@@ -1,0 +1,63 @@
+<h1 mat-dialog-title>Raktár {{ data.event }}</h1>
+<div mat-dialog-content>
+  <mat-form-field *ngIf="data.event == 'Módosítás'">
+    <input
+      #name="ngModel"
+      matInput
+      placeholder="Raktár id"
+      [(ngModel)]="data.id"
+      disabled
+    />
+  </mat-form-field>
+  <mat-form-field>
+    <input
+      #address="ngModel"
+      matInput
+      placeholder="Raktár címe"
+      [(ngModel)]="data.address"
+      maxlength="50"
+      required
+    />
+    <mat-error>
+      A raktár címe nem lehet üres, és legfeljebb 50 karakterből állhat
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <input
+      #length="ngModel"
+      matInput
+      placeholder="Raktár hossza"
+      [(ngModel)]="data.length"
+      type="number"
+      min="1"
+      max="5"
+      required
+    />
+    <mat-error> A raktár hosszának 1 és 5 között kell lennie </mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <input
+      #width="ngModel"
+      matInput
+      placeholder="Raktár szélessége"
+      [(ngModel)]="data.width"
+      type="number"
+      min="1"
+      max="5"
+      required
+    />
+    <mat-error> A raktár szélességének 1 és 5 között kell lennie </mat-error>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="closeDialog()">Mégse</button>
+  <span class="spacer"></span>
+  <button
+    mat-button
+    [mat-dialog-close]="data"
+    style="color: #fff; background-color: #153961"
+    [disabled]="!address.valid || !width.valid || !length.valid"
+  >
+    Mentés
+  </button>
+</div>
