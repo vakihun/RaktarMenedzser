@@ -1,27 +1,32 @@
-import { AfterContentInit, Component, ViewChild } from '@angular/core';
+import {AfterContentInit, Component, OnDestroy, ViewChild} from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { WarehouseService } from '../services/warehouse.service';
+import { WarehouseService } from './warehouse.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { ConfirmationDialogComponent } from '../confirm-dialog/confirm-dialog.component';
-import { AuthService } from '../services/auth.service';
-import { Warehouse } from '../warehouse';
-import { WarehouseModalComponent } from '../warehouse-modal/warehouse-modal.component';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Subject } from 'rxjs';
+import { ConfirmationDialogComponent } from '../shared/confirm-dialog/confirm-dialog.component';
+import { AuthService, Role } from '../auth/auth.service';
+import { Warehouse } from './warehouse.model';
+import { WarehouseEditComponent } from './warehouse-edit/warehouse-edit.component';
+import {BehaviorSubject, Subscription} from 'rxjs';
+import {take} from "rxjs/operators";
+import {Thing} from "../things/thing.model";
+import {ThingService} from "../things/thing.service";
 
 @Component({
   selector: 'app-warehouses',
   templateUrl: './warehouses.component.html',
   styleUrls: ['./warehouses.component.css'],
 })
-export class WarehousesComponent implements AfterContentInit {
-  displayedColumns: string[] = ['id', 'address', 'length', 'width', 'actions'];
+export class WarehousesComponent implements AfterContentInit, OnDestroy {
+  displayedColumns: string[] = ['id', 'address','length', 'width', 'actions'];
   dataSource: MatTableDataSource<Warehouse>;
 
-  dialogRef?: MatDialogRef<ConfirmationDialogComponent>;
-  eventsSubject: Subject<void> = new Subject<void>();
+  dialogRef: MatDialogRef<ConfirmationDialogComponent>;
+
+  subscription: Subscription;
+  userRole: Role;
+  Role: typeof Role = Role;
 
   @ViewChild(MatPaginator) set matPaginator(paginator: MatPaginator) {
     if (!this.dataSource.paginator) {
@@ -34,21 +39,24 @@ export class WarehousesComponent implements AfterContentInit {
     }
   }
 
-  constructor(
-    private warehouseService: WarehouseService,
-    public dialog: MatDialog,
-    private authservice: AuthService,
-    private snackBar: MatSnackBar
-  ) {
-    this.dataSource = new MatTableDataSource<Warehouse>();
-  }
+  constructor(private warehouseService: WarehouseService, private thingService: ThingService, public dialog: MatDialog, private authService: AuthService) {}
 
   ngAfterContentInit() {
-    this.refreshTable();
+    this.dataSource = new MatTableDataSource<Warehouse>();
+    this.subscription = this.warehouseService.warehousesChanged
+      .subscribe(
+        (warehouses: Warehouse[]) => {
+          this.dataSource.data = warehouses;
+        }
+      );
+    this.dataSource.data = this.warehouseService.getWarehouses();
+    this.authService.user.pipe(take(1)).subscribe(user => {
+      this.userRole = user.role;
+    });
   }
 
-  get isAdmin(): boolean {
-    return this.authservice.isAdmin();
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   applyFilter(event: Event): void {
@@ -60,71 +68,25 @@ export class WarehousesComponent implements AfterContentInit {
     }
   }
 
-  refreshTable(): void {
-    this.warehouseService
-      .getWarehouses()
-      .subscribe((warehouses) => (this.dataSource.data = warehouses));
-
-    this.eventsSubject.next();
-  }
-
-  showSnackBar(content: string, action: string, duration: number): void {
-    let sb = this.snackBar.open(content, action, {
-      duration: duration,
-      panelClass: ['snackbar-style'],
-    });
-    sb.onAction().subscribe(() => {
-      sb.dismiss();
-    });
-  }
-
-  //////////////////////////////////////////////////////////////
-
-  openDialog(action: string, obj: any): void {
-    const dialogRef = this.dialog.open(WarehouseModalComponent, {
-      width: '250px',
+  openEditDialog(element: any): void {
+    let editMode = -1;
+    if(Object.keys(element).length !== 0) {
+      editMode = this.dataSource.sortData(this.dataSource.filteredData,this.dataSource.sort).findIndex( obj => obj === element);
+    }
+    this.dialog.open(WarehouseEditComponent, {
+      width: '350px',
       data: {
-        id: obj.id,
-        address: obj.address,
-        length: obj.length,
-        width: obj.width,
-        event: action,
+        id: element.id,
+        address: element.name,
+        length: element.length,
+        width: element.width,
+        editMode: editMode,
       },
     });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result === undefined) return;
-      if (result.event == 'Létrehozás') {
-        this.addData(result);
-      } else if (result.event == 'Módosítás') {
-        this.updateData(obj, result);
-      }
-    });
   }
-
-  addData(warehouse: Warehouse): void {
-    this.warehouseService.addWarehouse(
-      warehouse.address,
-      warehouse.length,
-      warehouse.width
-    );
-    this.refreshTable();
-    this.showSnackBar('Sikeres mentés', '', 5000);
-  }
-  updateData(warehouse: Warehouse, result: Warehouse): void {
-    this.warehouseService.updateWarehouse(
-      warehouse,
-      result.address,
-      result.length,
-      result.width
-    );
-    this.refreshTable();
-    this.showSnackBar('Sikeres mentés', '', 5000);
-  }
-
-  //////////////////////////////////////////////////////////////
 
   openConfirmationDialog(warehouse: Warehouse): void {
+    const index = this.dataSource.sortData(this.dataSource.filteredData,this.dataSource.sort).findIndex( obj => obj === warehouse);
     this.dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       disableClose: false,
     });
@@ -133,8 +95,7 @@ export class WarehousesComponent implements AfterContentInit {
 
     this.dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.warehouseService.removeWarehouse(warehouse);
-        this.refreshTable();
+        this.warehouseService.deleteWarehouse(index);
       }
     });
   }

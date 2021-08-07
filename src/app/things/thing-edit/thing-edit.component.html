@@ -1,0 +1,40 @@
+<h1 mat-dialog-title>Tárgy {{ editMode === -1 ? 'létrehozásas' : 'szerkesztése' }}</h1>
+<form [formGroup]="modalForm" (ngSubmit)="onSubmit()">
+<div mat-dialog-content>
+  <mat-form-field>
+    <input
+      matInput
+      placeholder="Tárgy neve"
+      formControlName="name"
+    />
+    <mat-error>
+      A tárgy neve nem lehet üres, és legfeljebb 50 karakterből állhat
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <input
+      matInput
+      placeholder="Tárgy hossza"
+      type="number"
+      formControlName="length"
+    />
+    <mat-error> A tárgy hosszának 1 és 5 között kell lennie </mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <input
+      matInput
+      placeholder="Tárgy szélessége"
+      type="number"
+      formControlName="width"
+    />
+    <mat-error> A tárgy szélességének 1 és 5 között kell lennie </mat-error>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button type="button" (click)="onCancel()">Mégse</button>
+  <span class="spacer"></span>
+  <button mat-button style="color: #fff; background-color: #153961" [disabled]="!modalForm.valid" type="submit">
+    Mentés
+  </button>
+</div>
+</form>
