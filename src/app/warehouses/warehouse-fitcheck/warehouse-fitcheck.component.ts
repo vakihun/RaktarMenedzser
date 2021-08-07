@@ -1,47 +1,50 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { WarehouseService } from 'src/app/warehouses/warehouse.service';
-import { Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-warehouse-fitcheck',
   templateUrl: './warehouse-fitcheck.component.html',
   styleUrls: ['./warehouse-fitcheck.component.css'],
 })
-export class WarehouseFitcheckComponent implements OnInit, OnDestroy {
-  isFit: string;
-  eventSubscription: Subscription;
-  bgColor: string;
+export class WarehouseFitcheckComponent implements OnInit {
+  fitCheckUpdate$: Observable<{ isFit: string, bgColor: string }>;
 
-  constructor(private warehouseService: WarehouseService) {}
+  constructor(private warehouseService: WarehouseService) {
+  }
 
   ngOnInit(): void {
-    this.eventSubscription = this.warehouseService.fitCheckUpdate.subscribe(this.calculateIsFit);
+    this.fitCheckUpdate$ = this.warehouseService.fitCheckUpdate.pipe(
+      map(this.calculateIsFit)
+    );
   }
-  ngOnDestroy(): void {
-    this.eventSubscription.unsubscribe();
-  }
-  calculateIsFit({things, warehouses})
-  {
-      for (let warehouse of warehouses) {
-        let warehouseLength: number = warehouse.length;
-        let warehouseWidth: number = warehouse.width;
-        for (let thing of things) {
-          if (
-            thing.length <= warehouseLength &&
-            thing.width <= warehouseWidth
-          ) {
-            warehouseLength -= thing.length;
-            warehouseWidth -= thing.width;
-            things = things.filter((obj) => obj !== thing);
-          }
+
+  calculateIsFit({ things, warehouses }): { isFit: string, bgColor: string } {
+    warehouses.forEach(warehouse => {
+      let warehouseLength: number = warehouse.length;
+      let warehouseWidth: number = warehouse.width;
+      things.forEach(thing => {
+        if (
+          thing.length <= warehouseLength &&
+          thing.width <= warehouseWidth
+        ) {
+          warehouseLength -= thing.length;
+          warehouseWidth -= thing.width;
+          things = things.filter((obj) => obj !== thing);
         }
+      });
+    });
+    if (things.length == 0) {
+      return {
+        isFit: 'Befér',
+        bgColor: 'green'
       }
-      if (things.length == 0) {
-        this.isFit = 'BEFÉR';
-        this.bgColor = 'green';
-      } else {
-        this.isFit = 'NEM FÉR';
-        this.bgColor = 'red';
+    } else {
+      return {
+        isFit: 'Nem fér',
+        bgColor: 'red'
       }
+    }
   }
 }

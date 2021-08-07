@@ -17,7 +17,7 @@ import { AuthInterceptorService } from './auth/auth-interceptor.service';
 import { LayoutModule } from '@angular/cdk/layout';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {MaterialModule} from "./shared/material.module";
+import { MaterialModule } from "./shared/material.module";
 
 @NgModule({
   declarations: [

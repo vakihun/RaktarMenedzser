@@ -1,9 +1,9 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
-import {Subscription} from "rxjs";
+import { Subscription } from "rxjs";
 
 @Component({
-  selector: 'app-main-nav',
+  selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css'],
 })
@@ -16,9 +16,9 @@ export class HeaderComponent implements OnInit, OnDestroy{
 
   ngOnInit() {
     this.userSub = this.authService.user.subscribe(user => {
-      this.isAuthenticated = !!user;
-      if(this.isAuthenticated)
+      if(this.isAuthenticated = !!user) {
         this.username = user.name;
+      }
     });
   }
 

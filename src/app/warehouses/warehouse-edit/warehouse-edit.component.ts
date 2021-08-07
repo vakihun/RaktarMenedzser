@@ -1,9 +1,9 @@
-import {Component, OnInit, Inject, OnDestroy} from '@angular/core';
+import { Component, OnInit, Inject} from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import {FormGroup, FormControl, Validators} from "@angular/forms";
-import {WarehouseService} from "../warehouse.service";
-import {SnackbarService} from "../../shared/snackbar.service";
-import {Warehouse} from "../warehouse.model";
+import { FormGroup, FormControl, Validators } from "@angular/forms";
+import { WarehouseService } from "../warehouse.service";
+import { SnackbarService } from "../../shared/snackbar.service";
+import { Warehouse } from "../warehouse.model";
 
 interface DialogData {
   id: string;
@@ -23,7 +23,10 @@ export class WarehouseEditComponent implements OnInit {
   modalForm: FormGroup;
   editMode: number;
 
-  constructor(public dialogRef: MatDialogRef<WarehouseEditComponent>, @Inject(MAT_DIALOG_DATA) private data: DialogData, private warehouseService: WarehouseService, private snackbarService: SnackbarService) {}
+  constructor(public dialogRef: MatDialogRef<WarehouseEditComponent>,
+              @Inject(MAT_DIALOG_DATA) private data: DialogData,
+              private warehouseService: WarehouseService,
+              private snackbarService: SnackbarService) {}
 
   ngOnInit() {
     this.editMode = this.data.editMode;
@@ -38,7 +41,7 @@ export class WarehouseEditComponent implements OnInit {
       warehouseWidth = this.data.width;
     }
     this.modalForm = new FormGroup({
-      id: new FormControl(warehouseId),
+      id: new FormControl({ value: warehouseId,disabled: true }),
       address: new FormControl(warehouseAddress, [Validators.required,Validators.maxLength(50)]),
       length: new FormControl(warehouseLength, [Validators.required,Validators.min(1),Validators.max(5)]),
       width: new FormControl(warehouseWidth, [Validators.required,Validators.min(1),Validators.max(5)]),

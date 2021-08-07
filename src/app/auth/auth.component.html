@@ -10,13 +10,7 @@
         <mat-error> Kérlek adj meg egy érvényes email címet</mat-error>
       </mat-form-field>
       <mat-form-field class="full-width-input">
-        <input
-          matInput
-          type="password"
-          placeholder="Jelszó"
-          formControlName="password"
-          required
-        />
+        <input matInput type="password" placeholder="Jelszó" formControlName="password"/>
         <mat-error> Kérlek adj meg egy érvényes jelszót</mat-error>
       </mat-form-field>
       <button mat-raised-button color="primary" [disabled]="!loginForm.valid">Bejelentkezés</button>

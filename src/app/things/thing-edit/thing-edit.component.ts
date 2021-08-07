@@ -22,7 +22,10 @@ export class ThingEditComponent implements OnInit {
   modalForm: FormGroup;
   editMode: number;
 
-  constructor(public dialogRef: MatDialogRef<ThingEditComponent>, @Inject(MAT_DIALOG_DATA) private data: DialogData, private thingService: ThingService, private snackbarService: SnackbarService) {}
+  constructor(public dialogRef: MatDialogRef<ThingEditComponent>,
+              @Inject(MAT_DIALOG_DATA) private data: DialogData,
+              private thingService: ThingService,
+              private snackbarService: SnackbarService) {}
 
   ngOnInit() {
     this.editMode = this.data.editMode;

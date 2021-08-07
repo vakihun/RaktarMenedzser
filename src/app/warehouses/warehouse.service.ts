@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 
 import { Warehouse } from './warehouse.model';
-import {BehaviorSubject, Subject} from "rxjs";
-import {Thing} from "../things/thing.model";
-import {ThingService} from "../things/thing.service";
+import { BehaviorSubject, Subject } from "rxjs";
+import { Thing } from "../things/thing.model";
+import { ThingService } from "../things/thing.service";
 
 @Injectable({
   providedIn: 'root',

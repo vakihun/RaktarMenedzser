@@ -20,3 +20,8 @@ body {
 .spacer {
   flex: 1 1 auto;
 }
+
+.savebtn {
+  color: #fff;
+  background-color: #153961;
+}

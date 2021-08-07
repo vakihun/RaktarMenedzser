@@ -1,5 +1,5 @@
 <div fxLayout="row">
   <div fxFlex="40" fxFlexOffset="30">
-    <mat-card [ngStyle]="{ 'background-color': bgColor }">{{ isFit }}</mat-card>
+    <mat-card [ngStyle]="{ 'background-color': (fitCheckUpdate$ | async).bgColor }">{{ (fitCheckUpdate$ | async).isFit }}</mat-card>
   </div>
 </div>

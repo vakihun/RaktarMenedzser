@@ -22,7 +22,7 @@ export class ThingsComponent implements AfterContentInit, OnDestroy {
 
   dialogRef: MatDialogRef<ConfirmationDialogComponent>;
 
-  subscription: Subscription;
+  subscriptions: Subscription[] = [];
   userRole: Role;
   Role: typeof Role = Role;
 
@@ -41,20 +41,20 @@ export class ThingsComponent implements AfterContentInit, OnDestroy {
 
   ngAfterContentInit() {
     this.dataSource = new MatTableDataSource<Thing>();
-    this.subscription = this.thingService.thingsChanged
+    this.subscriptions.push(this.thingService.thingsChanged
       .subscribe(
         (things: Thing[]) => {
           this.dataSource.data = things;
         }
-      );
-    this.dataSource.data = this.thingService.getThings();
-    this.authService.user.pipe(take(1)).subscribe(user => {
+      ));
+    this.subscriptions.push(this.authService.user.pipe(take(1)).subscribe(user => {
       this.userRole = user.role;
-    });
+    }));
+    this.dataSource.data = this.thingService.getThings();
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
   applyFilter(event: Event): void {

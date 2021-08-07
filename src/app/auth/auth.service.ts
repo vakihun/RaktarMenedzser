@@ -1,8 +1,8 @@
-import {Injectable} from '@angular/core';
-import {Router} from '@angular/router';
-import {UUID} from 'uuid-generator-ts';
-import {User} from "./user.model";
-import {BehaviorSubject} from "rxjs";
+import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { UUID } from 'uuid-generator-ts';
+import { User } from "./user.model";
+import { BehaviorSubject } from "rxjs";
 
 interface MockedUser {
   name: string;
@@ -39,8 +39,6 @@ export class AuthService {
   ];
 
   constructor(private router: Router) {}
-
-
 
   login(email: string, password: string) {
     const user = this.mockedUsers.find(obj => obj.email === email && obj.password == password);

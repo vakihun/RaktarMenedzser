@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>Tárgy {{ editMode === -1 ? 'létrehozásas' : 'szerkesztése' }}</h1>
+<h1 mat-dialog-title>Tárgy {{ editMode === -1 ? 'létrehozása' : 'szerkesztése' }}</h1>
 <form [formGroup]="modalForm" (ngSubmit)="onSubmit()">
 <div mat-dialog-content>
   <mat-form-field>
@@ -33,7 +33,7 @@
 <div mat-dialog-actions>
   <button mat-button type="button" (click)="onCancel()">Mégse</button>
   <span class="spacer"></span>
-  <button mat-button style="color: #fff; background-color: #153961" [disabled]="!modalForm.valid" type="submit">
+  <button mat-button class="savebtn" [disabled]="!modalForm.valid" type="submit">
     Mentés
   </button>
 </div>

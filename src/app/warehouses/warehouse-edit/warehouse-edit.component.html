@@ -6,7 +6,6 @@
         matInput
         placeholder="Raktár azonosítója"
         formControlName="id"
-        [disabled]="true"
       />
     </mat-form-field>
     <mat-form-field>
@@ -41,7 +40,7 @@
   <div mat-dialog-actions>
     <button mat-button type="button" (click)="onCancel()">Mégse</button>
     <span class="spacer"></span>
-    <button mat-button style="color: #fff; background-color: #153961" [disabled]="!modalForm.valid" type="submit">
+    <button mat-button class="savebtn" [disabled]="!modalForm.valid" type="submit">
       Mentés
     </button>
   </div>

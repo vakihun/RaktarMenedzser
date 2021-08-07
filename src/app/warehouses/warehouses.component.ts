@@ -1,4 +1,4 @@
-import {AfterContentInit, Component, OnDestroy, ViewChild} from '@angular/core';
+import { AfterContentInit, Component, OnDestroy, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -8,10 +8,9 @@ import { ConfirmationDialogComponent } from '../shared/confirm-dialog/confirm-di
 import { AuthService, Role } from '../auth/auth.service';
 import { Warehouse } from './warehouse.model';
 import { WarehouseEditComponent } from './warehouse-edit/warehouse-edit.component';
-import {BehaviorSubject, Subscription} from 'rxjs';
-import {take} from "rxjs/operators";
-import {Thing} from "../things/thing.model";
-import {ThingService} from "../things/thing.service";
+import { Subscription } from 'rxjs';
+import { take } from "rxjs/operators";
+import { ThingService } from "../things/thing.service";
 
 @Component({
   selector: 'app-warehouses',
@@ -24,7 +23,7 @@ export class WarehousesComponent implements AfterContentInit, OnDestroy {
 
   dialogRef: MatDialogRef<ConfirmationDialogComponent>;
 
-  subscription: Subscription;
+  subscriptions: Subscription[] = [];
   userRole: Role;
   Role: typeof Role = Role;
 
@@ -43,20 +42,20 @@ export class WarehousesComponent implements AfterContentInit, OnDestroy {
 
   ngAfterContentInit() {
     this.dataSource = new MatTableDataSource<Warehouse>();
-    this.subscription = this.warehouseService.warehousesChanged
+    this.subscriptions.push(this.warehouseService.warehousesChanged
       .subscribe(
         (warehouses: Warehouse[]) => {
           this.dataSource.data = warehouses;
         }
-      );
+      ));
     this.dataSource.data = this.warehouseService.getWarehouses();
-    this.authService.user.pipe(take(1)).subscribe(user => {
+    this.subscriptions.push(this.authService.user.pipe(take(1)).subscribe(user => {
       this.userRole = user.role;
-    });
+    }));
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
   applyFilter(event: Event): void {
@@ -77,7 +76,7 @@ export class WarehousesComponent implements AfterContentInit, OnDestroy {
       width: '350px',
       data: {
         id: element.id,
-        address: element.name,
+        address: element.address,
         length: element.length,
         width: element.width,
         editMode: editMode,
