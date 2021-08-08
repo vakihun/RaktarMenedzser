@@ -25,3 +25,7 @@ body {
   color: #fff;
   background-color: #153961;
 }
+
+.success-dialog {
+  color: white !important;
+}

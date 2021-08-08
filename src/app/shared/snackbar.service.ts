@@ -10,7 +10,7 @@ export class SnackbarService {
 
   public open(message, action = '', duration = 5000) {
     this.zone.run(() => {
-      this.snackBar.open(message, action, { duration });
+      this.snackBar.open(message, action, { duration: duration, panelClass: "success-dialog" });
     });
   }
 }
