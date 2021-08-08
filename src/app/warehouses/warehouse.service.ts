@@ -21,7 +21,7 @@ export class WarehouseService {
   }
 
   getWarehouses() {
-    return this.warehouses;
+    return this.warehouses.slice();
   }
 
   updateWarehouse(index: number, newWarehouse: Warehouse){

@@ -21,7 +21,7 @@ export class ThingService {
   constructor() {}
 
   getThings() {
-    return this.things;
+    return this.things.slice();
   }
 
   updateThing(index: number, newThing: Thing){

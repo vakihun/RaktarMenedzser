@@ -37,12 +37,12 @@ export class WarehouseFitcheckComponent implements OnInit {
     });
     if (things.length == 0) {
       return {
-        isFit: 'Befér',
+        isFit: 'BEFÉR',
         bgColor: 'green'
       }
     } else {
       return {
-        isFit: 'Nem fér',
+        isFit: 'NEM FÉR',
         bgColor: 'red'
       }
     }
